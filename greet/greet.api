@@ -1,0 +1,94 @@
+service greet-api {
+	//基础接口
+	//视频流接口
+	@handler FeedHandler
+	get /douyin/feed (FeedRequest) returns (FeedResponse)
+	
+	//用户注册
+	@handler UserRegister
+	post /douyin/user/register (UserRegisterRequest) returns (UserRegisterReply)
+	
+	//用户登录
+	@handler UserLogin
+	post /douyin/user/login (UserLoginRequest) returns (UserLoginReply)
+	
+	//用户信息
+	@handler UserDetail
+	get /douyin/user (UserDetailRequest) returns (UserDetailReply)
+}
+
+@server (
+	middleware :Auth
+)
+
+service greet-api{
+	//视频投稿
+	@handler VideoUpload
+	post /douyin/publish/action (VideoUploadRequest) returns (VideoUploadReply)
+	//视频列表
+	@handler VideoList
+	get /douyin/publish/list (VideoListRequest) returns (VideoListReply)
+}
+
+type VideoListRequest {
+}
+
+type VideoListReply {
+	StatusCode int64       `json:"status_code"` // 状态码，0-成功，其他值-失败
+	StatusMsg  string      `json:"status_msg"`  // 返回状态描述
+	VideoList  interface{} `json:"video_list"`  // 用户发布的视频列表
+}
+
+type VideoUploadRequest {
+	Title    string `form:"title"`
+	Path     string `json:"path,optional"`
+	Hash     string `json:"hash,optional"`
+	UserId   int64  `json:"userId,optional"`
+	UserName string `json:"userName,optional"`
+}
+
+type VideoUploadReply {
+	StatusCode int64  `json:"status_code"`
+	StatusMsg  string `json:"status_msg"`
+}
+
+type UserDetailRequest {
+	User_id string `json:"userId"`
+	Token   string `json:"token"`
+}
+
+type UserDetailReply {
+	StatusCode int64       `json:"status_code"` // 状态码，0-成功，其他值-失败
+	StatusMsg  string      `json:"status_msg"`  // 返回状态描述
+	User       interface{} `json:"user"`
+}
+
+type FeedRequest {
+}
+
+type FeedResponse {
+	NextTime   *int64      `json:"next_time"`   // 本次返回的视频中，发布最早的时间，作为下次请求时的latest_time
+	StatusCode int64       `json:"status_code"` // 状态码，0-成功，其他值-失败
+	StatusMsg  string      `json:"status_msg"`  // 返回状态描述
+	VideoList  interface{} `json:"video_list"`  // 视频列表
+}
+type UserRegisterRequest {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+type UserRegisterReply {
+	StatusCode int64  `json:"status_code"` // 状态码，0-成功，其他值-失败
+	StatusMsg  string `json:"status_msg"`  // 返回状态描述
+	Token      string `json:"token"`       // 用户鉴权token
+	UserID     int64  `json:"user_id"`     // 用户id
+}
+type UserLoginRequest {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+type UserLoginReply {
+	StatusCode int64  `json:"status_code"` // 状态码，0-成功，其他值-失败
+	StatusMsg  string `json:"status_msg"`  // 返回状态描述
+	Token      string `json:"token"`       // 用户鉴权token
+	UserID     int64  `json:"user_id"`     // 用户id
+}

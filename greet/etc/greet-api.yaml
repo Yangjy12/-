@@ -1,0 +1,12 @@
+Name: greet-api
+Host: 0.0.0.0
+Port: 8888
+MaxBytes:
+  8388600
+MaxConns:
+  9000
+Mysql:
+  DataSource: root:123456@tcp(127.0.0.1:3306)/byte_code_project?charset=utf8
+
+Redis:
+  Addr: 127.0.0.1:6379
